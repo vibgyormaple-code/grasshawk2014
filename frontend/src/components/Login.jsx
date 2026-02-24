@@ -1,26 +1,17 @@
 import React, { useState } from 'react';
 import { translations } from '../utils/translations';
 
-const Login = ({ onClose, onSwitchToRegister, onLogin, language = 'en' }) => {
+const Login = ({ onClose, onSwitchToRegister, language = 'en' }) => {
   const t = translations[language] || translations.en;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   console.log('Login component rendered!');
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Login attempt:', { email, password });
-    if (typeof onLogin === 'function') {
-      const result = await onLogin(email, password);
-      if (result && result.success) {
-        onClose();
-      } else {
-        alert(result?.message || 'Login failed');
-      }
-    } else {
-      onClose();
-    }
+    onClose();
   };
 
   return (
