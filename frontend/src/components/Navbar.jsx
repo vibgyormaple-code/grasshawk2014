@@ -247,6 +247,8 @@ const XIcon = () => (
 
 const Navbar = ({ language, setLanguage }) => {
   const { cartCount } = useCart();
+  // API base URL (will use environment variable in production)
+  const API_BASE = process.env.REACT_APP_API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4242';
   const [menuVisible, setMenuVisible] = useState(false);
   
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -309,7 +311,7 @@ const Navbar = ({ language, setLanguage }) => {
   const handleLogin = async (email, password) => {
     try {
       console.log('Attempting login with:', { email, password });
-      const response = await fetch('http://localhost:4242/api/auth/login', {
+      const response = await fetch(`${API_BASE}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -343,7 +345,7 @@ const Navbar = ({ language, setLanguage }) => {
 
   const handleRegister = async (userData) => {
     try {
-      const response = await fetch('http://localhost:4242/api/auth/register', {
+      const response = await fetch(`${API_BASE}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -375,7 +377,7 @@ const Navbar = ({ language, setLanguage }) => {
     try {
       const token = localStorage.getItem('token');
       if (token) {
-        await fetch('http://localhost:4242/api/auth/logout', {
+        await fetch(`${API_BASE}/api/auth/logout`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -405,7 +407,7 @@ const Navbar = ({ language, setLanguage }) => {
         setIsLoggedIn(true);
         
         // Verify token with backend
-        fetch('http://localhost:4242/api/auth/me', {
+        fetch(`${API_BASE}/api/auth/me`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -694,6 +696,7 @@ const Navbar = ({ language, setLanguage }) => {
             setShowLoginModal(false);
             setShowRegisterModal(true);
           }}
+          onLogin={handleLogin}
           language={language}
         />
       )}
@@ -706,6 +709,7 @@ const Navbar = ({ language, setLanguage }) => {
             setShowRegisterModal(false);
             setShowLoginModal(true);
           }}
+          onRegister={handleRegister}
           language={language}
         />
       )}
