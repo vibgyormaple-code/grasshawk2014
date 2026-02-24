@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { translations } from '../utils/translations';
 
-const Register = ({ onClose, onSwitchToLogin, language = 'en' }) => {
+const Register = ({ onClose, onSwitchToLogin, onRegister, language = 'en' }) => {
   const t = translations[language] || translations.en;
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -9,10 +9,19 @@ const Register = ({ onClose, onSwitchToLogin, language = 'en' }) => {
 
   console.log('Register component rendered!');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Register attempt:', { name, email, password });
-    onClose();
+    if (typeof onRegister === 'function') {
+      const result = await onRegister({ name, email, password });
+      if (result && result.success) {
+        onClose();
+      } else {
+        alert(result?.message || 'Registration failed');
+      }
+    } else {
+      onClose();
+    }
   };
 
   return (
